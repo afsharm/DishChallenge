@@ -8,4 +8,4 @@ RUN dotnet publish -c release -o /app
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1
 WORKDIR /app
 COPY --from=build /app .
-ENTRYPOINT ["dotnet", "DishChallenge.dll"]
+CMD ASPNETCORE_URLS=http://*:$PORT dotnet DishChallenge.dll
