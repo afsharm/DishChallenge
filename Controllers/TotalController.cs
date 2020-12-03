@@ -19,10 +19,17 @@ namespace DishChallenge.Controllers
         }
 
         [HttpGet]
-        public async Task<int> Get()
+        public async Task<IActionResult> Get()
         {
-            var result = await ChallengeService.CalcAsync();
-            return result;
+            try
+            {
+                var result = await ChallengeService.CalcAsync();
+                return Ok(result);
+            }
+            catch (Exception exception)
+            {
+                return BadRequest($"{exception.Message} - {exception.InnerException?.Message}");
+            }
         }
     }
 }
