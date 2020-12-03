@@ -14,17 +14,22 @@ namespace DishChallenge
             var content = await ReadDataAsync();
 
             if (content == null)
-                return -1;
+                return -3;
 
             var basket = DeserializeData(content);
 
             if (basket?.products?.Count <= 0 || basket?.specials?.Count <= 0)
-                return -1;
+                return -2;
 
+            //Assuming 'products' is showing available products, their remaining quantity and theri price, an inventory is formed here.
             var inventory = new List<ProductInventory>();
             basket.products.ForEach(x => inventory.Add(new ProductInventory { Name = x.name, Current = x.quantity, Price = x.price }));
+
+            //Any record in the `specials` is considered as a partial order.
+            //reaming quantities from inventory are considered to see if they can reach min. quantity or not
             var candidOrders = CalcCandidOrders(inventory, basket);
 
+            //now that every possible order is calculated, find the minimum one
             var finals = candidOrders.OrderBy(x => x.TotalPrice).ToList();
 
             if (finals.Count <= 0)
@@ -41,6 +46,7 @@ namespace DishChallenge
             foreach (var offer in basket.specials)
             {
                 //Deep copy
+                //Each order is processed based on the initial inventory
                 var tempInventory = new List<ProductInventory>();
                 inventory.ForEach(x => tempInventory.Add(new ProductInventory { Current = x.Current, Price = x.Price, Name = x.Name }));
 
