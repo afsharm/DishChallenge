@@ -26,7 +26,7 @@ namespace DishChallenge
             basket.products.ForEach(x => inventory.Add(new ProductInventory { Name = x.name, Current = x.quantity, Price = x.price }));
 
             //Any record in the `specials` is considered as a partial order.
-            //reaming quantities from inventory are considered to see if they can reach min. quantity or not
+            //remaining quantities from inventory are considered to see if they can reach min. quantity or not
             var candidOrders = CalcCandidOrders(inventory, basket);
 
             //now that every possible order is calculated, find the minimum one
